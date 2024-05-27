@@ -4,7 +4,7 @@ export const dbConnection = () => {
     // console
     // .log(process.env.MONGO_URI)
 
-    .connect(process.env.MONGO_URI_DEV, {
+    .connect(process.env.MONGO_URI_PROD, {
       dbName: "MERN_BLOG_WEB",
     })
     .then(() => {
