@@ -13,8 +13,8 @@ dotenv.config({ path: "./config/config.env" });
 
 app.use(
   cors({
-    // origin: [process.env.FRONTEND_URL],
-    origin: "*",
+    origin: [process.env.FRONTEND_URL],
+    // origin: "*",
 
     methods: ["GET", "PUT", "DELETE", "POST"],
     credentials: true,
