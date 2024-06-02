@@ -91,15 +91,12 @@ export const login = catchAsyncError(async (req, res, next) => {
 });
 
 export const logOut = catchAsyncError(async (req, res, next) => {
-   const { token } = req.cookies;
-  console.log("logout......................");
-  token + "dfghj";
   res
-    .status(200)
     .cookie("token", "", {
-      expires: new Date(Date.now()),
       httpOnly: true,
-            sameSite: 'None',  
+      secure: true,
+      sameSite: "none",
+      expires: new Date(1),
     })
     .json({
       success: true,
