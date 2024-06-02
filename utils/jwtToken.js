@@ -12,7 +12,7 @@ export const sendToken = (user, statusCode, message, res) => {
         httpOnly: true,        // Accessible only by web server
         secure: true,          // Use HTTPS
         sameSite: 'Strict',    // CSRF protection
-        maxAge: 3600000        // 1 hour in milliseconds
+        maxAge: 3600000*5        // 1 hour in milliseconds
     });
   res.status(statusCode).json({
     success: true,
