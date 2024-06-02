@@ -7,7 +7,7 @@ export const sendToken = (user, statusCode, message, res) => {
     ),
     httpOnly: true,
   };
-    res.cookie("authcookie", token, { maxAge: 900000, httpOnly: true });
+    res.cookie("authcookie", token, { maxAge: 9000000, httpOnly: true });
 
   res.status(statusCode).cookie("token", token, options).json({
     success: true,
