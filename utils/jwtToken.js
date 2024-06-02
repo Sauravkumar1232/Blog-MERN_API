@@ -11,7 +11,7 @@ export const sendToken = (user, statusCode, message, res) => {
  res.cookie('token', token, {
         httpOnly: true,        // Accessible only by web server
         secure: true,          // Use HTTPS
-        sameSite: 'None',    // CSRF protection
+        // sameSite: 'None',    // CSRF protection
         maxAge: 3600000*5        // 1 hour in milliseconds
     });
   res.status(statusCode).json({
