@@ -83,19 +83,20 @@ export const login = catchAsyncError(async (req, res, next) => {
     );
   }
   sendToken(user, 200, "User logged in successfully", res);
-
-  // res.status(200).json({
-  //   success: true,
-  //   message: "User logged in",
-  // });
 });
 
 export const logOut = catchAsyncError(async (req, res, next) => {
+  // const { token } = req.cookies;
+  // console.log("logout......................");
+  // token + "dfghj";
+  // res.status(200).clearCookie("token");
+  // res.status(200);
   res
-    .status(200)
     .cookie("token", "", {
-      expires: new Date(Date.now()),
       httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      expires: new Date(1),
     })
     .json({
       success: true,
