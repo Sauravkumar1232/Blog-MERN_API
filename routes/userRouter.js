@@ -5,6 +5,7 @@ import {
   logOut,
   getMyProfile,
   getAuthors,
+  getPopularAuthors,
 } from "../controller/userController.js";
 import { isAuthenticated } from "../middleware/auth.js";
 const router = express.Router();
@@ -19,4 +20,6 @@ router.get("/view", (req, res) => {
 router.get("/logout", isAuthenticated, logOut);
 router.get("/myProfile", isAuthenticated, getMyProfile);
 router.get("/getAuthors", getAuthors);
+router.get("/getPopularAuthors", getPopularAuthors);
+
 export default router;
