@@ -1,6 +1,8 @@
 import { catchAsyncError } from "../middleware/catchAsyncError.js";
 import ErrorHandler from "../middleware/error.js";
 import { User } from "../model/userSchema.js";
+import { Blog } from "../model/blogSchema.js";
+
 import { sendToken } from "../utils/jwtToken.js";
 import cloudinary from "cloudinary";
 export const register = catchAsyncError(async (req, res, next) => {
@@ -64,12 +66,12 @@ export const register = catchAsyncError(async (req, res, next) => {
   // });
 });
 
-export const login = catchAsyncError(async (req, res, next) => {
+export const login = async (req, res, next) => {
   const { email, password, role } = req.body;
   if (!email || !password || !role) {
     return next(new ErrorHandler("Please Fill full details", 400));
   }
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select("+password"); // find user with password also
   if (!user) {
     return next(new ErrorHandler("Invalid email or password", 400));
   }
@@ -83,14 +85,9 @@ export const login = catchAsyncError(async (req, res, next) => {
     );
   }
   sendToken(user, 200, "User logged in successfully", res);
-});
+};
 
 export const logOut = catchAsyncError(async (req, res, next) => {
-  // const { token } = req.cookies;
-  // console.log("logout......................");
-  // token + "dfghj";
-  // res.status(200).clearCookie("token");
-  // res.status(200);
   res
     .cookie("token", "", {
       httpOnly: true,
@@ -117,4 +114,39 @@ export const getAuthors = catchAsyncError(async (req, res, next) => {
     success: true,
     authors,
   });
+});
+
+export const getPopularAuthors = catchAsyncError(async (req, res, next) => {
+  try {
+    // Fetch all authors
+    const authors = await User.find({ role: "Author" });
+
+    const authorsWithRating = await Promise.all(
+      authors.map(async (author) => {
+        const blogs = await Blog.find({
+          createdBy: author._id,
+          published: true,
+        });
+        const totalRating = blogs.reduce((acc, blog) => acc + blog.rating, 0);
+
+        return {
+          author,
+          totalRating,
+        };
+      })
+    );
+
+    // Sort authors by average blog rating in descending order
+    const popularAuthors = authorsWithRating.sort(
+      (a, b) => b.totalRating - a.totalRating
+    );
+    res.status(200).json({
+      success: true,
+      message: "Fetching popular authors",
+      popularAuthors,
+    });
+  } catch (error) {
+    console.error("Error fetching popular authors:", error);
+    throw error;
+  }
 });
